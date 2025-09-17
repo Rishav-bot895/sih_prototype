@@ -1,0 +1,9 @@
+{
+  "lookup": {
+    "eJyLrq6NBQAEOAGx": "action_listen",
+    "eJyLrq7VUaguKEoti09MLsnMz7NSqIYw4vMSc1OtFKCcnMziktQ8oNrS4tQioJrMPCC3xEohvSg1taS2NhYA6dwbhQ==": "utter_greet",
+    "eJyLrq7VUaguKEoti09MLsnMz7NSqIYw4vMSc1OtFKCcnMziktQ8oNrS4tQioJrMPCC3xEohvSg1taSWgBmlJSWpRfEQpbhMiAUAQvc0lw==": "symptom_form",
+    "eJyLrq7VUaguKEoti09MLsnMz7NSqIYw4vMSc1OtFKCcnMziktQ8oNrS4tQioJrMPCC3xEohvSg1taSWgBmlJSWpRfEQpeSZUFyZW1CSnxufll+Ui9OIWABlQk4r": "action_check_disease",
+    "eJydjFEKgCAQBa/iATqBV4lYxF4lpcbuFoR094T6jaC/GRimLWdjysrYyXkNOVlTbqDkIqx5ZAmiSLXdBFybkKqqNSMDen48NlUw3em/gxxx1RxpyBx/Lh7xE/xMfRA4weuquwB/kmqr": "action_listen"
+  }
+}

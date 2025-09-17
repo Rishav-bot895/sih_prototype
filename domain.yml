@@ -2,33 +2,62 @@ version: "3.1"
 
 intents:
   - greet
-  - goodbye
+  - symptom
   - affirm
   - deny
-  - mood_great
-  - mood_unhappy
-  - bot_challenge
+  - goodbye
+
+entities:
+  - symptom
+
+slots:
+  symptom1:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_entity
+        entity: symptom
+
+  symptom2:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_entity
+        entity: symptom
+
+  symptom3:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_entity
+        entity: symptom
+
+forms:
+  symptom_form:
+    required_slots:
+      - symptom1
+      - symptom2
+      - symptom3
 
 responses:
   utter_greet:
-  - text: "Hey! How are you?"
+    - text: "Hi, I am a health chatbot. Tell me your first symptom."
 
-  utter_cheer_up:
-  - text: "Here is something to cheer you up:"
-    image: "https://i.imgur.com/nGF1K8f.jpg"
+  utter_ask_symptom1:
+    - text: "What is your first symptom?"
 
-  utter_did_that_help:
-  - text: "Did that help you?"
+  utter_ask_symptom2:
+    - text: "Can you tell me another symptom you have?"
 
-  utter_happy:
-  - text: "Great, carry on!"
+  utter_ask_symptom3:
+    - text: "Do you have any other symptom?"
 
-  utter_goodbye:
-  - text: "Bye"
+  utter_cannot_diagnose:
+    - text: "I cannot pinpoint your condition with certainty. Please consult a doctor."
 
-  utter_iamabot:
-  - text: "I am a bot, powered by Rasa."
+  utter_disclaimer:
+    - text: "⚠️ I am just a chatbot. Please consult a qualified health practitioner."
 
-session_config:
-  session_expiration_time: 60
-  carry_over_slots_to_new_session: true
+actions:
+  - action_check_disease
+  - validate_symptom_form

@@ -1,0 +1,23 @@
+{
+  "lookup": {
+    "rules": {
+      "[{\"prev_action\": {\"action_name\": \"action_listen\"}, \"user\": {\"intent\": \"symptom\"}}]": "symptom_form",
+      "[{\"prev_action\": {\"action_name\": \"action_listen\"}, \"user\": {\"intent\": \"symptom\"}}, {\"active_loop\": {\"name\": \"symptom_form\"}, \"prev_action\": {\"action_name\": \"symptom_form\"}, \"user\": {\"intent\": \"symptom\"}}]": "action_listen"
+    },
+    "rule_only_slots": [],
+    "rule_only_loops": [
+      "symptom_form"
+    ],
+    "rules_for_loop_unhappy_path": {
+      "[{\"prev_action\": {\"action_name\": \"action_listen\"}}, {\"active_loop\": {\"name\": \"symptom_form\"}, \"prev_action\": {\"action_name\": \"symptom_form\"}, \"user\": {\"intent\": \"symptom\"}}]": "do_not_predict_loop_action"
+    },
+    "rules_not_in_stories": [
+      "handling active loops and forms - symptom_form",
+      "predicting default action with intent back",
+      "predicting default action with intent restart",
+      "predicting default action with intent session_start",
+      "[{\"prev_action\": {\"action_name\": \"action_listen\"}, \"user\": {\"intent\": \"symptom\"}}]",
+      "handling active loops and forms - symptom_form - action_listen"
+    ]
+  }
+}

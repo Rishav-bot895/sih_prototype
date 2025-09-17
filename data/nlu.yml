@@ -3,89 +3,43 @@ version: "3.1"
 nlu:
 - intent: greet
   examples: |
-    - hey
-    - hello
     - hi
-    - hello there
-    - good morning
-    - good evening
-    - moin
-    - hey there
-    - let's go
-    - hey dude
-    - goodmorning
-    - goodevening
-    - good afternoon
+    - hello
+    - hey
 
-- intent: goodbye
+- intent: symptom
   examples: |
-    - cu
-    - good by
-    - cee you later
-    - good night
-    - bye
-    - goodbye
-    - have a nice day
-    - see you around
-    - bye bye
-    - see you later
+    # Common Cold
+    - I have [cough](symptom)
+    - I am sneezing a lot
+    - I have a [runny nose](symptom)
+    - I feel [sore throat](symptom)
+    - I am feeling [fatigued](symptom)
 
-- intent: affirm
-  examples: |
-    - yes
-    - y
-    - indeed
-    - of course
-    - that sounds good
-    - correct
+    # Hypertension
+    - My [blood pressure](symptom) is high
+    - I feel [dizzy](symptom)
+    - I have [headache](symptom)
+    - I feel [shortness of breath](symptom)
+    - I have [chest pain](symptom)
 
-- intent: deny
-  examples: |
-    - no
-    - n
-    - never
-    - I don't think so
-    - don't like that
-    - no way
-    - not really
+    # Dengue
+    - I have [high fever](symptom)
+    - I am experiencing [rashes](symptom)
+    - I feel [joint pain](symptom)
+    - I have [headache](symptom)
+    - I feel [nausea](symptom)
 
-- intent: mood_great
-  examples: |
-    - perfect
-    - great
-    - amazing
-    - feeling like a king
-    - wonderful
-    - I am feeling very good
-    - I am great
-    - I am amazing
-    - I am going to save the world
-    - super stoked
-    - extremely good
-    - so so perfect
-    - so good
-    - so perfect
+    # Malaria
+    - I have [chills](symptom)
+    - I feel [feverish](symptom)
+    - I am experiencing [sweating](symptom)
+    - I have [headache](symptom)
+    - I feel [fatigue](symptom)
 
-- intent: mood_unhappy
-  examples: |
-    - my day was horrible
-    - I am sad
-    - I don't feel very well
-    - I am disappointed
-    - super sad
-    - I'm so sad
-    - sad
-    - very sad
-    - unhappy
-    - not good
-    - not very good
-    - extremly sad
-    - so saad
-    - so sad
-
-- intent: bot_challenge
-  examples: |
-    - are you a bot?
-    - are you a human?
-    - am I talking to a bot?
-    - am I talking to a human?
+    # Typhoid
+    - I have [fever](symptom)
+    - I feel [stomachache](symptom)
+    - I have [headache](symptom)
+    - I feel [nausea](symptom)
+    - I am [weak](symptom)
