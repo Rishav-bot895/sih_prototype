@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Health Chatbot</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header {
+      background: rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 1rem 0;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header h1 {
+      color: white;
+      font-size: 1.8rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .header .subtitle {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 0.9rem;
+      margin-top: 0.3rem;
+      font-weight: 400;
+    }
+
+    .chat-container {
+      flex: 1;
+      max-width: 800px;
+      margin: 0 auto;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      height: calc(100vh - 80px); /* Adjust based on header height */
+    }
+
+    .messages-container {
+      flex: 1;
+      overflow-y: auto;
+      padding: 2rem 1rem;
+      scroll-behavior: smooth;
+    }
+
+    .message {
+      margin-bottom: 1.5rem;
+      animation: slideIn 0.4s ease-out;
+    }
+
+    .message-content {
+      max-width: 85%;
+      padding: 1rem 1.5rem;
+      border-radius: 18px;
+      font-size: 1rem;
+      line-height: 1.5;
+      position: relative;
+      word-wrap: break-word;
+    }
+
+    .user-message {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .user-message .message-content {
+      background: linear-gradient(135deg, #00d4ff, #0099cc);
+      color: white;
+      border-bottom-right-radius: 6px;
+      box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);
+    }
+
+    .bot-message {
+      display: flex;
+      justify-content: flex-start;
+    }
+
+    .bot-message .message-content {
+      background: rgba(40, 40, 40, 0.95);
+      color: #e2e8f0;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-bottom-left-radius: 6px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .input-container {
+      padding: 1.5rem;
+      background: rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(20px);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      position: sticky;
+      bottom: 0;
+      z-index: 50;
+    }
+
+    .input-wrapper {
+      max-width: 800px;
+      margin: 0 auto;
+      display: flex;
+      gap: 0.75rem;
+      align-items: flex-end;
+    }
+
+    .input-box {
+      flex: 1;
+      background: rgba(40, 40, 40, 0.95);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 25px;
+      padding: 0.75rem 1.25rem;
+      font-size: 1rem;
+      outline: none;
+      transition: all 0.3s ease;
+      resize: none;
+      min-height: 50px;
+      max-height: 120px;
+      overflow-y: auto;
+      font-family: inherit;
+      color: #e2e8f0;
+    }
+
+    .input-box::placeholder {
+      color: #a0aec0;
+    }
+
+    .input-box:focus {
+      border-color: #00d4ff;
+      box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
+    }
+
+    .send-button {
+      background: linear-gradient(135deg, #00d4ff, #0099cc);
+      border: none;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      color: white;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);
+    }
+
+    .send-button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 20px rgba(0, 212, 255, 0.4);
+    }
+
+    .send-button:active {
+      transform: scale(0.95);
+    }
+
+    .send-button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .typing-indicator {
+      display: none;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem 1.5rem;
+      background: rgba(40, 40, 40, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 18px;
+      border-bottom-left-radius: 6px;
+      max-width: 85%;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      color: #a0aec0;
+    }
+
+    .typing-dots {
+      display: flex;
+      gap: 4px;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      background: #00d4ff;
+      border-radius: 50%;
+      animation: typing 1.4s infinite;
+    }
+
+    .dot:nth-child(2) { animation-delay: 0.2s; }
+    .dot:nth-child(3) { animation-delay: 0.4s; }
+
+    .welcome-message {
+      text-align: center;
+      color: rgba(255, 255, 255, 0.9);
+      padding: 3rem 2rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .welcome-message h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      font-weight: 300;
+    }
+
+    .welcome-message p {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      opacity: 0.8;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes typing {
+      0%, 60%, 100% {
+        transform: scale(0.8);
+        opacity: 0.5;
+      }
+      30% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .header h1 {
+        font-size: 1.5rem;
+      }
+
+      .message-content {
+        max-width: 90%;
+        font-size: 0.95rem;
+        padding: 0.875rem 1.25rem;
+      }
+
+      .input-wrapper {
+        padding: 0 0.5rem;
+      }
+
+      .welcome-message {
+        padding: 2rem 1rem;
+      }
+
+      .welcome-message h2 {
+        font-size: 1.5rem;
+      }
+    }
+
+    /* ✅ Fixed footer */
+    .footer {
+      position: fixed;
+      bottom: 10px;
+      right: 20px;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 0.85rem;
+      font-weight: 500;
+      z-index: 100;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>🏥 Health Chatbot</h1>
+    <div class="subtitle">Your AI-powered health assistant</div>
+  </div>
+
+  <div class="chat-container">
+    <div class="messages-container" id="messagesContainer">
+      <div class="welcome-message" id="welcomeMessage">
+        <h2>Welcome to Health Chatbot</h2>
+        <p>I'm here to help you with health-related questions and provide medical guidance. Feel free to ask me anything about symptoms, conditions, or general health advice.</p>
+      </div>
+    </div>
+
+    <div class="typing-indicator" id="typingIndicator">
+      <div class="typing-dots">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+      <span>Health Assistant is typing...</span>
+    </div>
+  </div>
+
+  <div class="input-container">
+    <div class="input-wrapper">
+      <textarea 
+        id="userInput" 
+        class="input-box" 
+        placeholder="Ask me about your health concerns..."
+        rows="1"
+      ></textarea>
+      <button id="sendButton" class="send-button" onclick="sendMessage()">
+        ➤
+      </button>
+    </div>
+  </div>
+
+  <!-- ✅ Only one footer -->
+  <div class="footer">
+    Made by <strong>Team Synapsters</strong>
+  </div>
+
+  <script>
+    const messagesContainer = document.getElementById('messagesContainer');
+    const userInput = document.getElementById('userInput');
+    const sendButton = document.getElementById('sendButton');
+    const typingIndicator = document.getElementById('typingIndicator');
+    const welcomeMessage = document.getElementById('welcomeMessage');
+    let isFirstMessage = true;
+
+    userInput.addEventListener('input', function() {
+      this.style.height = 'auto';
+      this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+      sendButton.disabled = this.value.trim() === '';
+    });
+
+    userInput.addEventListener('keydown', function(event) {
+      if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault();
+        sendMessage();
+      }
+    });
+
+    function addMessage(content, isUser = false) {
+      const messageDiv = document.createElement('div');
+      messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
+      const contentDiv = document.createElement('div');
+      contentDiv.className = 'message-content';
+      contentDiv.textContent = content;
+      messageDiv.appendChild(contentDiv);
+      messagesContainer.appendChild(messageDiv);
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      return messageDiv;
+    }
+
+    function showTypingIndicator() {
+      typingIndicator.style.display = 'flex';
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    function hideTypingIndicator() {
+      typingIndicator.style.display = 'none';
+    }
+
+    async function sendMessage() {
+      const message = userInput.value.trim();
+      if (!message || sendButton.disabled) return;
+
+      if (isFirstMessage) {
+        welcomeMessage.style.display = 'none';
+        isFirstMessage = false;
+      }
+
+      addMessage(message, true);
+      userInput.value = '';
+      userInput.style.height = 'auto';
+      sendButton.disabled = true;
+      showTypingIndicator();
+
+      try {
+        const response = await fetch("http://localhost:5005/webhooks/rest/webhook", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ sender: "user", message: message })
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        hideTypingIndicator();
+
+        if (data && data.length > 0) {
+          data.forEach((msg, index) => {
+            if (msg.text) {
+              setTimeout(() => {
+                addMessage(msg.text, false);
+              }, index * 500);
+            }
+          });
+        } else {
+          addMessage("I'm sorry, I didn't receive a proper response. Please try again.", false);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        hideTypingIndicator();
+        let errorMessage = "I'm having trouble connecting to the server. ";
+        if (error.message.includes('Failed to fetch')) {
+          errorMessage += "Please make sure the Rasa server is running on localhost:5005.";
+        } else {
+          errorMessage += "Please check your connection and try again.";
+        }
+        addMessage(errorMessage, false);
+      }
+    }
+
+    sendButton.disabled = true;
+    userInput.focus();
+
+    setTimeout(() => {
+      if (isFirstMessage) {
+        addMessage("Hello! I'm your Health Assistant. How can I help you today?", false);
+      }
+    }, 1000);
+  </script>
+</body>
+</html>
